@@ -5,6 +5,7 @@ const TodoList = () => {
 		<>
 			<h1>todos</h1>
 			<div className="list">
+				<input type="text" className="form-control" placeholder="What needs to be done?"/>
 				<ul>
 					<li>My first todo</li>
 					<li>My first todo</li>
