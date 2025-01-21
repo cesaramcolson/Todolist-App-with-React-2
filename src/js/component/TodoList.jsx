@@ -15,8 +15,8 @@ const TodoList = () => {
 					value={newTask}
 					onChange={(e) => setNewTask(e.target.value)}
 					onKeyDown={(e) => {
-						if (e.key === 'Enter') {
-							setTaskList([...taskList, newTask])
+						if (e.key === 'Enter' && newTask.trim() !== "") {
+							setTaskList([...taskList, newTask.trim()])
 							setNewTask('')
 						}
 					}}
