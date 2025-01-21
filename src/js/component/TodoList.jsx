@@ -21,9 +21,20 @@ const TodoList = () => {
 						}
 					}}
 				/></li>
-					{taskList.map((index, item) => (
+					{taskList.map((item, index ) => (
 						<li>
-							<span>{index}</span>
+							<span>{item}</span>
+							<div className="trashIcon">
+								<i 
+									className="fa-solid fa-trash"
+									onClick={() => setTaskList(
+										taskList.filter(
+											(t, currentIndex) =>
+												index !== currentIndex
+										)
+									)}
+								></i>
+							</div>
 						</li>
 					))}
 				</ul>
