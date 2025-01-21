@@ -38,6 +38,9 @@ const TodoList = () => {
 						</li>
 					))}
 				</ul>
+				<div>
+					<p>{taskList.length === 0 ? "No pending task" : `${taskList.length} pending ${taskList.length === 1 ? "task" : "tasks"}`}</p>
+				</div>
 			</div>
 			<div className="borderOne"></div>
 			<div className="borderTwo"></div>
