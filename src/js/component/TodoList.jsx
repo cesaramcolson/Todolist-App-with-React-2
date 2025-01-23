@@ -41,6 +41,9 @@ const TodoList = () => {
 				<div>
 					<p>{taskList.length === 0 ? "No pending task" : `${taskList.length} pending ${taskList.length === 1 ? "task" : "tasks"}`}</p>
 				</div>
+				<div className="deleteAll">
+					<button type="button" className="deleteButton btn btn-danger">Clear All <i className="fa-solid fa-trash"></i></button>
+				</div>
 			</div>
 			<div className="borderOne"></div>
 			<div className="borderTwo"></div>
