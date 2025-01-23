@@ -1,8 +1,58 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 
 const TodoList = () => {
 	const [ taskList , setTaskList ] = useState([])
 	const [ newTask , setNewTask ] = useState("")
+
+	const apiRoute= 'https://playground.4geeks.com/todo/'
+
+	const createUser = async () => {
+		try {
+				const response = await fetch(`${apiRoute}users/cesar`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				});
+				if (!response.ok) {
+					console.error('Error: ', response.status, response.statusText);	
+				}
+				return response.json();
+		} catch (error) {
+			console.error('Request Failed: ', error.message);
+		}
+	};
+
+	const fetchTasks = async () => {
+		try {
+			const response = await fetch(`${apiRoute}users/cesar`, {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
+			if (!response.ok) {
+				if (response.status === 404) {
+					await createUser();
+					return fetchTasks();
+				}
+				console.error('Error: ', response.status, response.statusText)
+				return;
+			}
+			const body = await response.json();
+			if (body && body.todos) {
+				setTaskList(body.todos.map(task => ({ label: task.label, id: task.id })));
+			}
+			
+		} catch (error) {
+			console.error('Request Failed: ', error.message);
+		}
+	};
+
+	useEffect(() => {
+		fetchTasks();
+	}, []);
+
 	return (
 		<>
 			<h1>todos</h1>
@@ -16,14 +66,14 @@ const TodoList = () => {
 					onChange={(e) => setNewTask(e.target.value)}
 					onKeyDown={(e) => {
 						if (e.key === 'Enter' && newTask.trim() !== "") {
-							setTaskList([...taskList, newTask.trim()])
+							setTaskList([...taskList, { label: newTask.trim(), id: Date.now() }])
 							setNewTask('')
 						}
 					}}
 				/></li>
 					{taskList.map((item, index ) => (
-						<li>
-							<span>{item}</span>
+						<li key={item.id}>
+							<span>{item.label}</span>
 							<div className="trashIcon">
 								<i 
 									className="fa-solid fa-trash"
