@@ -49,6 +49,36 @@ const TodoList = () => {
 		}
 	};
 
+	const addTask = async () => {
+		if (!newTask.trim()) {
+			console.error("Task cannot be empty");
+			return;
+		}
+		try {
+			const response = await fetch(`${apiRoute}todos/cesar`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					"label": newTask,
+                    "is_done": false
+				})
+			});
+			if (!response.ok) {
+				console.error('Error: ', response.status, response.statusText);	
+				return;
+			}
+			const body = await response.json();
+			const newTaskWithId = { label: newTask, id: body.id };
+            setTaskList([...taskList, newTaskWithId]);
+            setNewTask("");
+
+		} catch (error) {
+			console.error('Request Failed: ', error.message);
+		}
+	}
+
 	useEffect(() => {
 		fetchTasks();
 	}, []);
@@ -66,8 +96,7 @@ const TodoList = () => {
 					onChange={(e) => setNewTask(e.target.value)}
 					onKeyDown={(e) => {
 						if (e.key === 'Enter' && newTask.trim() !== "") {
-							setTaskList([...taskList, { label: newTask.trim(), id: Date.now() }])
-							setNewTask('')
+							addTask();
 						}
 					}}
 				/></li>
