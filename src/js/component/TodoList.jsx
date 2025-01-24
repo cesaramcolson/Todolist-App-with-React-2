@@ -79,6 +79,26 @@ const TodoList = () => {
 		}
 	}
 
+	const removeTask = async (index) => {
+		const taskToRemove = taskList[index]
+		const updatedTasks = taskList.filter((t, currentIndex) => index !== currentIndex);
+		try {
+			const response = await fetch(`${apiRoute}todos/${taskToRemove.id}`, {
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
+			if (response.ok) {
+                setTaskList(updatedTasks);
+			} else {
+                console.error("Failed to delete task:", response.statusText);
+            }
+        } catch (error) {
+            console.error("Request Failed: ", error.message);
+        }
+    };
+
 	useEffect(() => {
 		fetchTasks();
 	}, []);
@@ -106,12 +126,7 @@ const TodoList = () => {
 							<div className="trashIcon">
 								<i 
 									className="fa-solid fa-trash"
-									onClick={() => setTaskList(
-										taskList.filter(
-											(t, currentIndex) =>
-												index !== currentIndex
-										)
-									)}
+									onClick={() => removeTask(index)}
 								></i>
 							</div>
 						</li>
