@@ -71,7 +71,7 @@ const TodoList = () => {
 			}
 			const body = await response.json();
 			const newTaskWithId = { label: newTask, id: body.id };
-            setTaskList([...taskList, newTaskWithId]);
+            setTaskList(prevTasks => [...prevTasks, newTaskWithId]);
             setNewTask("");
 
 		} catch (error) {
@@ -93,6 +93,26 @@ const TodoList = () => {
                 setTaskList(updatedTasks);
 			} else {
                 console.error("Failed to delete task:", response.statusText);
+            }
+        } catch (error) {
+            console.error("Request Failed: ", error.message);
+        }
+    };
+
+	const deleteUser = async () => {
+		try {
+			const response = await fetch(`${apiRoute}users/cesar`, {
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
+			if (response.ok) {
+				setTaskList([]);
+				await createUser()
+				return fetchTasks();
+			} else {
+                console.error("Failed to delete tasks:", response.statusText);
             }
         } catch (error) {
             console.error("Request Failed: ", error.message);
@@ -136,7 +156,7 @@ const TodoList = () => {
 					<p>{taskList.length === 0 ? "No pending task" : `${taskList.length} pending ${taskList.length === 1 ? "task" : "tasks"}`}</p>
 				</div>
 				<div className="deleteAll">
-					<button type="button" className="deleteButton btn btn-danger">Clear All <i className="fa-solid fa-trash"></i></button>
+					<button type="button" className="deleteButton btn btn-danger" onClick={() => deleteUser()}>Clear All <i className="fa-solid fa-trash"></i></button>
 				</div>
 			</div>
 			<div className="borderOne"></div>
